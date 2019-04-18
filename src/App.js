@@ -1,25 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Signup from './components/user-pages/Signup';
+import Axios from 'axios'
 
 class App extends Component {
+  constructor(){
+    super();
+    this.state ={
+      currentUser: null,
+    }
+  }
+
+componentDidMount(){
+  Axios.get('http://localhost:3001/api/checkuser', { withCredentials: true})
+  .then(responseFromServer => {
+    console.log("Check user that is logged in: ", responseFromServer.data)
+    const { userDoc } = responseFromServer.data;
+    this.syncCurrentUser(userDoc)
+  })
+}
+
+syncCurrentUser(user){
+  this.setState({ currentUser: user })
+}
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Signup currentUser={this.state.currentUser} onUserChange={ userDoc => this.syncCurrentUser(userDoc) }/>
       </div>
     );
   }
