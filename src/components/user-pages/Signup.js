@@ -26,6 +26,9 @@ class Signup extends Component {
         { withCredentials: true}
       )
       .then(ResponseFromServer => {
+        const { userDoc } = ResponseFromServer.data;
+        this.props.onUserChange(userDoc)
+
         this.setState({
           fullName: "", 
           email: "",
@@ -44,6 +47,18 @@ class Signup extends Component {
     }
 
     render(){
+      const { currentUser } = this.props
+      if(currentUser){
+        return(
+          <section>
+            <h2>You are signed In</h2>
+            <p> Welcome, { currentUser.fullName } ! Your email is { currentUser.email } </p>
+          </section>
+
+
+        )
+      }
+
       return(
         <section> 
           <h2>Signup</h2>
